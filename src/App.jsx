@@ -52,6 +52,15 @@ class App extends Component {
     load(
       (result) => {
         Storager.set({ verses: result.data });
+        Storager.get(['caches'], (res) => {
+          var caches = res.caches;
+          if (caches) {
+            caches.push(result.data);
+          } else {
+            caches = [result.data];
+          }
+          Storager.set({ caches });
+        });
       },
       (err) => {
         this.setState({ errMessage: err.errMessage });
@@ -73,6 +82,7 @@ class App extends Component {
         'fontName',
         'fonts',
         'colorMode',
+        'caches',
       ],
       (res) => {
         if (res.fonts && res.fontName === res.fonts.fontName) {
@@ -86,7 +96,7 @@ class App extends Component {
           defaultPlayChecked: res.defaultPlayChecked !== false,
           isVerticalVerses: res.versesLayout === VERTICAL,
           isPlaying: res.defaultPlayChecked !== false,
-          verses: res.verses || DEFAULT_SHICI,
+          verses: res.verses || res.caches[Math.floor(Math.random() * res.caches.length)],
           selected: res.selected || WAVES,
           engineOption: res.engineOption || GOOGLE_SEARCH,
           fontName: res.fontName || DEFAULT_FONT,
@@ -174,6 +184,16 @@ class App extends Component {
     if (keyCode === 37 || keyCode === 39) {
       this.setState(() => ({ waveColor: pickColor(this.state.isDarkMode) }));
     }
+  };
+
+  handleNotionToken = (notionToken) => {
+    console.log(`notionToken: ${notionToken}`);
+    Storager.set({ notionToken });
+  };
+
+  handleNotionDatabaseId = (databaseId) => {
+    console.log(`databaseId: ${databaseId}`);
+    Storager.set({ databaseId });
   };
 
   handleFontTypeChange = (fontName) => {
@@ -275,6 +295,8 @@ class App extends Component {
           colorMode={colorMode}
           fontName={fontName}
           onFontTypeChange={this.handleFontTypeChange}
+          handleNotionToken={this.handleNotionToken}
+          handleNotionDatabaseId={this.handleNotionDatabaseId}
           isFontLoading={isFontLoading}
           waveColor={waveColor}
         >

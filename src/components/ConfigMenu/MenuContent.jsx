@@ -48,6 +48,8 @@ const MenuContent = (props) => {
     onColorModeOptionChange,
     fontName,
     onFontTypeChange,
+    handleNotionToken,
+    handleNotionDatabaseId,
     isFontLoading,
     waveColor,
   } = props;
@@ -195,7 +197,29 @@ const MenuContent = (props) => {
         </Menu.Group>
       ),
     },
-
+    {
+      tabName: 'Token',
+      tabContent: (
+        <Menu.Group>
+          <Menu.Group title="输入token">
+            <Menu.Item>
+              <input
+                type="text"
+                placeholder="请输入Token"
+                onChange={(e) => handleNotionToken(e.target.value)}
+              />
+            </Menu.Item>
+            <Menu.Item>
+              <input
+                type="text"
+                placeholder="请输入Database ID"
+                onChange={(e) => handleNotionDatabaseId(e.target.value)}
+              />
+            </Menu.Item>
+          </Menu.Group>
+        </Menu.Group>
+      ),
+    },
     {
       tabName: '字体',
       tabContent: (
@@ -275,6 +299,8 @@ MenuContent.propTypes = {
   onColorModeOptionChange: PropTypes.func,
   fontName: PropTypes.string,
   onFontTypeChange: PropTypes.func,
+  handleNotionToken: PropTypes.func,
+  handleNotionDatabaseId: PropTypes.func,
   isFontLoading: PropTypes.bool,
   waveColor: PropTypes.object,
 };
